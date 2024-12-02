@@ -7,33 +7,32 @@ if(!File.Exists(filePath))
 {
     Console.WriteLine("filepath borked");
 }
-
-    using (StreamReader sr = new StreamReader(filePath))
+using (StreamReader sr = new StreamReader(filePath))
+{
+    string line;
+    while ((line = sr.ReadLine()) != null)
     {
-        string line;
-        while ((line = sr.ReadLine()) != null)
-        {
-            string[] ids = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (int.TryParse(ids[0], out int num1))
-                list1.Add(num1);
-            if (int.TryParse(ids[1], out int num2))
-                list2.Add(num2);
-        }
+        string[] ids = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (int.TryParse(ids[0], out int num1))
+            list1.Add(num1);
+        if (int.TryParse(ids[1], out int num2))
+            list2.Add(num2);
     }
-    list1.Sort();
-    list2.Sort();
+}
+list1.Sort();
+list2.Sort();
 
-    int difference = 0;
-    
-    for (int i = 0; i < list1.Count; i++)
+int difference = 0;
+
+for (int i = 0; i < list1.Count; i++)
+{
+    if (list1[i] > list2[i])
     {
-        if (list1[i] > list2[i])
-        {
-            difference += list1[i] - list2[i];
-        }
-        else
-        {
-            difference += list2[i] - list1[i];
-        }
+        difference += list1[i] - list2[i];
     }
-    Console.WriteLine(difference);
+    else
+    {
+        difference += list2[i] - list1[i];
+    }
+}
+Console.WriteLine(difference);
