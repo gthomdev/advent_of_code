@@ -7,8 +7,7 @@ if(!File.Exists(filePath))
 {
     Console.WriteLine("filepath borked");
 }
-if (File.Exists(filePath))
-{
+
     using (StreamReader sr = new StreamReader(filePath))
     {
         string line;
@@ -38,4 +37,3 @@ if (File.Exists(filePath))
         }
     }
     Console.WriteLine(difference);
-}
