@@ -14,20 +14,41 @@ catch (Exception)
 }
 
 // captures anything that starts mul, contains (, contains 2 nums separated by a ',', where each num is 1-3 digits, closed with a )
-string pattern = @"mul\(\d{1,3},\d{1,3}\)";
 
-var matches = Regex.Matches(memory, pattern);
+string mulPattern = @"mul\(\d{1,3},\d{1,3}\)";
+string doPattern = @"do\(\)";
+string dontPattern = @"don't\(\)";
 
+bool enabled = true; 
 int total = 0;
 
-foreach (Match match in matches)
+foreach (Match match in Regex.Matches(memory, $"{doPattern}|{dontPattern}|{mulPattern}"))
 {
-    string[] numbers = Regex.Matches(match.Value, @"\d+")
-        .Select(x => x.Value).ToArray();
+    var instruction = match.Value;
 
-    int x = int.Parse(numbers[0]);
-    int y = int.Parse(numbers[1]);
-    total += x * y;
+    if (Regex.IsMatch(instruction, doPattern))
+    {
+        enabled = true;
+    }
+
+    else if (Regex.IsMatch(instruction, dontPattern))
+    {
+        enabled = false;
+    }
+
+    else if (Regex.IsMatch(instruction, mulPattern))
+    {
+        if (enabled)
+        {
+            string[] numbers = Regex.Matches(instruction, @"\d+")
+                        .Select(m => m.Value)
+                        .ToArray();
+
+            int x = int.Parse(numbers[0]);
+            int y = int.Parse(numbers[1]);
+            total += x * y;
+        }
+    }
 }
 
 Console.WriteLine(total);
