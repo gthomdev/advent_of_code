@@ -12,7 +12,7 @@ catch (Exception)
 }
 
 string xmas = "XMAS";
-int count = CountXmases(griddy, xmas);
+int count = CountXmasPatterns(griddy);
 Console.WriteLine(count.ToString());
     
 static int CountXmases(string[] grid, string word)
@@ -51,6 +51,55 @@ static int CountXmases(string[] grid, string word)
                 {
                     count++;
                 }
+            }
+        }
+    }
+    return count;
+}
+
+static bool IsXmas(string[] grid, int startingRow, int startingColumn)
+//---------------------
+//
+//   M S    M M    S S 
+//    A      A      A
+//   M S    S S    M M 
+//
+//---------------------
+
+{
+    char topLeft = grid[startingRow][startingColumn];                 
+    char topRight = grid[startingRow][startingColumn + 2];                            
+    char center = grid[startingRow + 1][startingColumn + 1];
+    char bottomLeft = grid[startingRow + 2][startingColumn];
+    char bottomRight = grid[startingRow + 2][startingColumn + 2];
+
+    bool masmas = (topLeft == 'M' && center == 'A' && bottomRight == 'S' &&     // TL/BR MAS
+                   topRight == 'M' && center == 'A' && bottomLeft == 'S');      // TR/BL MAS
+    bool massam = (topLeft == 'M' && center == 'A' && bottomRight == 'S' &&     // TL/BR MAS
+                       topRight == 'S' && center == 'A' && bottomLeft == 'M');  // TR/BL SAM
+    bool sammas = (topLeft == 'S' && center == 'A' && bottomRight == 'M' &&     // TL/BR SAM
+                       topRight == 'M' && center == 'A' && bottomLeft == 'S');  // TR/BL SAM
+    bool samsam = (topLeft == 'S' && center == 'A' && bottomRight == 'M' &&     // TL/BR SAM
+                       topRight == 'S' && center == 'A' && bottomLeft == 'M');  // TR/BL SAM
+    
+    return (masmas || massam || sammas || samsam); //embrace the grossness
+}
+
+static int CountXmasPatterns(string[] grid)
+{
+    int rows = grid.Length;
+    int cols = grid[0].Length;
+    int count = 0;
+
+    // Iterate over every possible 3x3 region in the grid
+    for (int row = 0; row <= rows - 3; row++)
+    {
+        for (int col = 0; col <= cols - 3; col++)
+        {
+            // Check for the X-MAS pattern in this 3x3 region
+            if (IsXmas(grid, row, col))
+            {
+                count++;
             }
         }
     }
